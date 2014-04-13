@@ -106,6 +106,7 @@
     while(myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
     for (var user in userVideos){
           myNode.appendChild(userVideos[user]);
+          console.log(userVideos[user]);
     }
 
   }
