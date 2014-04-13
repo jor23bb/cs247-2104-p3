@@ -5,6 +5,7 @@
 
   var cur_video_blob = null;
   var fb_instance;
+  var userVideos;
 
   $(document).ready(function(){
     connect_to_chat_firebase();
@@ -29,10 +30,20 @@
     var fb_instance_users = fb_new_chat_room.child('users');
     var fb_instance_stream = fb_new_chat_room.child('stream');
     var my_color = "#"+((1<<24)*Math.random()|0).toString(16);
+    userVideos = {};
+
 
     // listen to events
     fb_instance_users.on("child_added",function(snapshot){
       display_msg({m:snapshot.val().name+" joined the room",c: snapshot.val().c});
+      // for video element
+      var video = document.createElement("video");
+      video.autoplay = true;
+      video.controls = false; // optional
+      video.loop = true;
+      video.width = 300;
+      userVideos[snapshot.val().name] = video;
+      document.getElementById("videos").appendChild(userVideos[snapshot.val().name]);
     });
     fb_instance_stream.on("child_added",function(snapshot){
       display_msg(snapshot.val());
@@ -50,7 +61,7 @@
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
         if(has_emotions($(this).val())){
-          fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color});
+          fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color, u:username});
         }else{
           fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
         }
@@ -67,12 +78,12 @@
   function display_msg(data){
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
-      // for video element
+      // // for video element
       var video = document.createElement("video");
       video.autoplay = true;
       video.controls = false; // optional
       video.loop = true;
-      video.width = 120;
+      video.width = 300;
 
       var source = document.createElement("source");
       source.src =  URL.createObjectURL(base64_to_blob(data.v));
@@ -80,12 +91,23 @@
 
       video.appendChild(source);
 
+      userVideos[data.u] = video;
+
       // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
       // var video = document.createElement("img");
       // video.src = URL.createObjectURL(base64_to_blob(data.v));
 
-      document.getElementById("conversation").appendChild(video);
+      redraw_videos();
     }
+  }
+
+  function redraw_videos(){
+    var myNode = document.getElementById("videos");
+    while(myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
+    for (var user in userVideos){
+          myNode.appendChild(userVideos[user]);
+    }
+
   }
 
   function scroll_to_bottom(wait_time){
@@ -165,7 +187,7 @@
 
   // check to see if a message qualifies to be replaced with video.
   var has_emotions = function(msg){
-    var options = ["lol",":)",":("];
+    var options = ["lol",":)",":(", ":-)", ":-(", "=)", "=P", ":P", ":-P", "omg"];
     for(var i=0;i<options.length;i++){
       if(msg.indexOf(options[i])!= -1){
         return true;
