@@ -29,7 +29,7 @@
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
     var fb_instance_users = fb_new_chat_room.child('users');
     var fb_instance_stream = fb_new_chat_room.child('stream');
-    var my_color = "#"+((1<<24)*Math.random()|0).toString(16);
+    var my_color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
     userVideos = {};
 
 
@@ -46,6 +46,9 @@
       document.getElementById("videos").appendChild(userVideos[snapshot.val().name]);
     });
     fb_instance_stream.on("child_added",function(snapshot){
+      if (snapshot.val().m && snapshot.val().v && snapshot.val().u !== username) {
+        fb_instance_stream.push({u:username, v:cur_video_blob})
+      }
       display_msg(snapshot.val());
     });
 
@@ -60,9 +63,9 @@
     // bind submission box
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
-        if(has_emotions($(this).val())){
+        if (has_emotions($(this).val())){
           fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color, u:username});
-        }else{
+        } else {
           fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
         }
         $(this).val("");
@@ -76,9 +79,13 @@
 
   // creates a message node and appends it to the conversation
   function display_msg(data){
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+    if (data.m) {
+      $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+      var conversationEl = document.getElementById("conversation");
+      conversationEl.scrollTop = conversationEl.scrollHeight;
+    }
     if(data.v){
-      // // for video element
+      // for video element
       var video = document.createElement("video");
       video.autoplay = true;
       video.controls = false; // optional
@@ -91,24 +98,20 @@
 
       video.appendChild(source);
 
+      // Get the video container.
+      var videoContainerEl = document.getElementById("videos");
+
+      // Replace the current video from the container.
+      videoContainerEl.replaceChild(video, userVideos[data.u]);
+
+      // Store the new video Element.
       userVideos[data.u] = video;
+
 
       // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
       // var video = document.createElement("img");
       // video.src = URL.createObjectURL(base64_to_blob(data.v));
-
-      redraw_videos();
     }
-  }
-
-  function redraw_videos(){
-    var myNode = document.getElementById("videos");
-    while(myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
-    for (var user in userVideos){
-          myNode.appendChild(userVideos[user]);
-          console.log(userVideos[user]);
-    }
-
   }
 
   function scroll_to_bottom(wait_time){
