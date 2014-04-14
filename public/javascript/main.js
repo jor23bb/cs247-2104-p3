@@ -191,7 +191,7 @@
 
   // check to see if a message qualifies to be replaced with video.
   var has_emotions = function(msg){
-    var options = ["lol",":)",":(", ":-)", ":-(", "=)", "=P", ":P", ":-P", "omg"];
+    var options = ["lol",":)",":(", ":-)", ":-(", "=)", "=P", ":P", ":-P", "omg", ";)", ";-)"];
     for(var i=0;i<options.length;i++){
       if(msg.indexOf(options[i])!= -1){
         return true;
