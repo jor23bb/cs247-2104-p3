@@ -46,6 +46,9 @@
       document.getElementById("videos").appendChild(userVideos[snapshot.val().name]);
     });
     fb_instance_stream.on("child_added",function(snapshot){
+      if (snapshot.val().m && snapshot.val().v && snapshot.val().u !== username) {
+        fb_instance_stream.push({u:username, v:cur_video_blob})
+      }
       display_msg(snapshot.val());
     });
 
@@ -76,7 +79,11 @@
 
   // creates a message node and appends it to the conversation
   function display_msg(data){
-    $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+    if (data.m) {
+      $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
+      var conversationEl = document.getElementById("conversation");
+      conversationEl.scrollTop = conversationEl.scrollHeight;
+    }
     if(data.v){
       // for video element
       var video = document.createElement("video");
