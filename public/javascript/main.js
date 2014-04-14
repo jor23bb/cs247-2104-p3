@@ -78,7 +78,7 @@
   function display_msg(data){
     $("#conversation").append("<div class='msg' style='color:"+data.c+"'>"+data.m+"</div>");
     if(data.v){
-      // // for video element
+      // for video element
       var video = document.createElement("video");
       video.autoplay = true;
       video.controls = false; // optional
@@ -91,24 +91,20 @@
 
       video.appendChild(source);
 
+      // Get the video container.
+      var videoContainerEl = document.getElementById("videos");
+
+      // Replace the current video from the container.
+      videoContainerEl.replaceChild(video, userVideos[data.u]);
+
+      // Store the new video Element.
       userVideos[data.u] = video;
+
 
       // for gif instead, use this code below and change mediaRecorder.mimeType in onMediaSuccess below
       // var video = document.createElement("img");
       // video.src = URL.createObjectURL(base64_to_blob(data.v));
-
-      redraw_videos();
     }
-  }
-
-  function redraw_videos(){
-    var myNode = document.getElementById("videos");
-    while(myNode.firstChild){ myNode.removeChild(myNode.firstChild);}
-    for (var user in userVideos){
-          myNode.appendChild(userVideos[user]);
-          console.log(userVideos[user]);
-    }
-
   }
 
   function scroll_to_bottom(wait_time){
