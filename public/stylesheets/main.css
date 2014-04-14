@@ -60,11 +60,9 @@ a {
   text-align: center;
   padding: 50px 0;
 }
-
 #videos {
   position: fixed;
 }
 #videos video {
   vertical-align: top;
-
 }

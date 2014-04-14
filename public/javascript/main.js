@@ -46,10 +46,10 @@
       document.getElementById("videos").appendChild(userVideos[snapshot.val().name]);
     });
     fb_instance_stream.on("child_added",function(snapshot){
+      display_msg(snapshot.val());
       if (snapshot.val().m && snapshot.val().v && snapshot.val().u !== username) {
         fb_instance_stream.push({u:username, v:cur_video_blob})
       }
-      display_msg(snapshot.val());
     });
 
     // block until username is answered
