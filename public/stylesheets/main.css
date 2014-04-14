@@ -22,9 +22,12 @@ a {
   z-index: 999;
 }
 #conversation {
-  padding: 10px 10px 80px;
+  padding: 10px 10px 0px;
   overflow-y: scroll;
-  height: 100%;
+  position: absolute;
+  top: 255px;
+  bottom: 54px;
+  width: 100%;
 }
 #videos {
   position: fixed;
@@ -57,6 +60,11 @@ a {
   text-align: center;
   padding: 50px 0;
 }
-.lower {
-  margin-top: 300px;
+
+#videos {
+  position: fixed;
+}
+#videos video {
+  vertical-align: top;
+
 }

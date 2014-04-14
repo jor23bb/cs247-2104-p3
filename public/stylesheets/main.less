@@ -26,9 +26,12 @@ a {
 }
 
 #conversation{
-  padding: 10px 10px 80px;
+  padding: 10px 10px 0px;
   overflow-y: scroll;
-  height: 100%;
+  position: absolute;
+  top: 255px;
+  bottom: 54px;
+  width: 100%;
 }
 
 #videos{
@@ -66,7 +69,11 @@ a {
   padding: 50px 0;
 }
 
-.lower{
 
-  margin-top: 300px;
+#videos {
+  position:fixed;
+  video {
+    vertical-align: top;
+  }
 }
+
