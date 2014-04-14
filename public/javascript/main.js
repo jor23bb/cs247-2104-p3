@@ -29,7 +29,7 @@
     var fb_new_chat_room = fb_instance.child('chatrooms').child(fb_chat_room_id);
     var fb_instance_users = fb_new_chat_room.child('users');
     var fb_instance_stream = fb_new_chat_room.child('stream');
-    var my_color = "#"+((1<<24)*Math.random()|0).toString(16);
+    var my_color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
     userVideos = {};
 
 
@@ -60,9 +60,9 @@
     // bind submission box
     $("#submission input").keydown(function( event ) {
       if (event.which == 13) {
-        if(has_emotions($(this).val())){
+        if (has_emotions($(this).val())){
           fb_instance_stream.push({m:username+": " +$(this).val(), v:cur_video_blob, c: my_color, u:username});
-        }else{
+        } else {
           fb_instance_stream.push({m:username+": " +$(this).val(), c: my_color});
         }
         $(this).val("");
